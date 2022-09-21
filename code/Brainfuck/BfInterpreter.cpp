@@ -6,41 +6,53 @@
 
 void Run(const std::vector<char>& code){
     char cpu[30000];
+    int stoppedLoop = 0;
     int pos = 0;
     std::vector<int> loopStack;
     for (int i = 0; i < code.size(); ++i){
         switch (code[i]){
             case '>':
-                ++pos;
+                if (!stoppedLoop) ++pos;
                 break;
             case '<':
-                --pos;
+                if (!stoppedLoop) --pos;
                 break;
             case '+':
-                ++cpu[pos];
+                if (!stoppedLoop) ++cpu[pos];
                 break;
             case '-':
-                --cpu[pos];
+                if (!stoppedLoop) --cpu[pos];
                 break;
             case '.':
-                std::cout << cpu[pos];
+                if (!stoppedLoop) std::cout << cpu[pos];
                 break;
             case ',':
-                std::cin >> cpu[pos];
+                if (!stoppedLoop) std::cin >> cpu[pos];
             case '[':
+                if (!cpu[pos] || stoppedLoop){
+                    std::cout << "\nloop stopped on " << pos << '\n';
+                    ++stoppedLoop;
+                }
                 loopStack.push_back(i);
                 break;
             case ']':
-                if (cpu[pos]){
-                    i = *(loopStack.end() - 1);
+                if (stoppedLoop){
+                    --stoppedLoop;
+                    std::cout << "\nloop resumed on " << pos << '\n';
                 }
-                else{
+                else if (cpu[pos]){
+                    i = *(loopStack.end() - 1);
+                }else{
                     loopStack.pop_back();
                 }
                 break;
             default:
                 break;
         }
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < 20; ++i){
+        std::cout << int(cpu[i]) << ' ';
     }
 }
 
