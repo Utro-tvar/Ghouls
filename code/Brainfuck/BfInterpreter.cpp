@@ -30,7 +30,6 @@ void Run(const std::vector<char>& code){
                 if (!stoppedLoop) std::cin >> cpu[pos];
             case '[':
                 if (!cpu[pos] || stoppedLoop){
-                    std::cout << "\nloop stopped on " << pos << '\n';
                     ++stoppedLoop;
                 }
                 loopStack.push_back(i);
@@ -38,7 +37,6 @@ void Run(const std::vector<char>& code){
             case ']':
                 if (stoppedLoop){
                     --stoppedLoop;
-                    std::cout << "\nloop resumed on " << pos << '\n';
                 }
                 else if (cpu[pos]){
                     i = *(loopStack.end() - 1);
@@ -49,10 +47,6 @@ void Run(const std::vector<char>& code){
             default:
                 break;
         }
-    }
-    std::cout << std::endl;
-    for (int i = 0; i < 20; ++i){
-        std::cout << int(cpu[i]) << ' ';
     }
 }
 
